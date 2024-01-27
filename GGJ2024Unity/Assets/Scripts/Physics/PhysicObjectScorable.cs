@@ -9,6 +9,8 @@ public class PhysicObject : MonoBehaviour
     
     public int scoreAmount = 100;
 
+    public PhysicObj physicObj;
+
     private void OnTriggerEnter(Collider other)
     {
         PhysicTrigger physicTrigger = other.gameObject.GetComponent<PhysicTrigger>();
@@ -16,6 +18,8 @@ public class PhysicObject : MonoBehaviour
         {
             canGiveScore = false;
             GameManager.Instance.currentScore += scoreAmount;
+            physicObj.hasTotalPhysic = true;
+            physicObj.Rb.constraints = RigidbodyConstraints.None;
         }
     }
 
