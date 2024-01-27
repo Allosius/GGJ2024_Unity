@@ -1,9 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class FirstPersonCharacterGrabObjectsController : MonoBehaviour
 {
+    private PlayerInteraction playerInteraction;
     // Reference to the character camera.
     [SerializeField]
     private Camera characterCamera;
@@ -12,6 +14,13 @@ public class FirstPersonCharacterGrabObjectsController : MonoBehaviour
     private Transform slot;
     // Reference to the currently held item.
     private PickableItem pickedItem;
+
+
+    private void Start()
+    {
+        playerInteraction = GetComponent<PlayerInteraction>();
+    }
+
     /// <summary>
     /// Method called very frame.
     /// </summary>
@@ -49,10 +58,22 @@ public class FirstPersonCharacterGrabObjectsController : MonoBehaviour
 
         if (Input.GetMouseButtonDown(1))
         {
-            if (pickedItem && pickedItem.Animator)
+            if (playerInteraction.GetCurrentTapirInRange() == false)
             {
-                pickedItem.Animator.enabled = true;
-                pickedItem.Animator.SetTrigger("Shake");
+                if (pickedItem && pickedItem.Animator)
+                {
+                    pickedItem.Animator.enabled = true;
+                    pickedItem.Animator.SetTrigger("Shake");
+                    pickedItem.OnAttractionItem(GameCore.Instance.tapir);
+                }
+            }
+            else
+            {
+                if (playerInteraction.CurrentTapirInRange && pickedItem && playerInteraction.CurrentTapirInRange.canAbsorbObject)
+                {
+                    playerInteraction.CurrentTapirInRange.AbsorbPickableItem(pickedItem);
+                    pickedItem = null;
+                }
             }
         }
     }

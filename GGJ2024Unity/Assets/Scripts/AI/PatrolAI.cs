@@ -5,12 +5,14 @@ using UnityEngine.AI;
 public class PatrolAI : MonoBehaviour
 {
     private bool walkPointSet;
+    private bool canPatrol;
 
     [SerializeField] private float walkPointRange = 2.2f;
 
     [SerializeField] private float walkDirectionTimer = 5.0f;
 
     public Vector3 walkPoint { get; set; }
+    
 
     public LayerMask whatIsGround;
 
@@ -27,8 +29,30 @@ public class PatrolAI : MonoBehaviour
         Patroling();
     }
 
+    public void SetCanPatrol(bool value)
+    {
+        canPatrol = value;
+        if (canPatrol)
+        {
+            agent.enabled = true;
+        }
+        else
+        {
+            if (agent.enabled)
+            {
+                agent.SetDestination(transform.position);
+                agent.enabled = false;
+            }
+        }
+    }
+    
     public void SearchWalkPoint()
     {
+        if (canPatrol == false)
+        {
+            return;
+        }
+        
         Debug.Log("SearchWalkPoint");
         // Calculate random point in range
         float randomZ = Random.Range(-walkPointRange, walkPointRange);
@@ -36,16 +60,20 @@ public class PatrolAI : MonoBehaviour
 
         walkPoint = new Vector3(transform.position.x + randomX * 2, transform.position.y, transform.position.z + randomZ);
 
-        walkPointSet = true;
-
-        //if (Physics.Raycast(walkPoint, -transform.up, 2f, whatIsGround))
-        //{
-            
-        //}
+        
+        if (Physics.Raycast(walkPoint, -transform.up, 2f, whatIsGround))
+        {
+            walkPointSet = true;
+        }
     }
 
     void Patroling()
     {
+        if (canPatrol == false)
+        {
+            return;
+        }
+        
         if (!walkPointSet)
         {
             SearchWalkPoint();

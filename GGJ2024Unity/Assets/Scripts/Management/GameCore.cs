@@ -8,10 +8,16 @@ using UnityEngine;
 
 public class GameCore : AllosiusDevUtilities.Singleton<GameCore>
 {
+    public TapirController tapir { get; protected set; }
+
     private void Start()
     {
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Confined;
+
+        tapir = FindObjectOfType<TapirController>();
+
+        GameManager.Instance.currentScore = 0;
     }
 
     private void Update()
