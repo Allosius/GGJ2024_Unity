@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class ShakeScript : MonoBehaviour
 {
+    private bool isShaking = false;
     private int currentShakeLoopCount = 0;
     
     [SerializeField] float shakeSpeed = 10f;
@@ -24,7 +25,14 @@ public class ShakeScript : MonoBehaviour
 
     public void Shake()
     {
+        if (isShaking)
+        {
+            return;
+        }
+        
         currentShakeLoopCount = 0;
+
+        isShaking = true;
         
         StartCoroutine(CoroutineShake());
     }
@@ -54,6 +62,10 @@ public class ShakeScript : MonoBehaviour
         if (currentShakeLoopCount < shakeLoopCount)
         {
             StartCoroutine(CoroutineShake());
+        }
+        else
+        {
+            isShaking = false;
         }
     }
 }

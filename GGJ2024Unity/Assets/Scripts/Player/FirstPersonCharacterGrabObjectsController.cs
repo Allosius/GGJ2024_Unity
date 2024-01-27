@@ -46,6 +46,15 @@ public class FirstPersonCharacterGrabObjectsController : MonoBehaviour
                 }
             }
         }
+
+        if (Input.GetMouseButtonDown(1))
+        {
+            if (pickedItem && pickedItem.Animator)
+            {
+                pickedItem.Animator.enabled = true;
+                pickedItem.Animator.SetTrigger("Shake");
+            }
+        }
     }
     /// <summary>
     /// Method for picking up item.
