@@ -17,7 +17,8 @@ public class PhysicObj : MonoBehaviour
         }
         else
         {
-            Rb.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ;
+            //Rb.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ;
+            Rb.constraints = RigidbodyConstraints.None;
         }
     }
 
@@ -39,7 +40,7 @@ public class PhysicObj : MonoBehaviour
         if (tapir != null && hasTotalPhysic == false)
         {
             Debug.Log("On Collision Exit Tapir");
-            Rb.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ;
+            //Rb.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ;
         }
     }
 }

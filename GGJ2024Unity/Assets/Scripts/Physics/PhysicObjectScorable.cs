@@ -17,7 +17,7 @@ public class PhysicObject : MonoBehaviour
         if (physicTrigger && canGiveScore)
         {
             canGiveScore = false;
-            GameManager.Instance.currentScore += scoreAmount;
+            GameManager.Instance.AddScore(scoreAmount);
             physicObj.hasTotalPhysic = true;
             physicObj.Rb.constraints = RigidbodyConstraints.None;
         }
