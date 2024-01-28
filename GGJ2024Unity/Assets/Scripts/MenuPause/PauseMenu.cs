@@ -79,7 +79,7 @@ public class PauseMenu : MonoBehaviour
 
         //Afficher le menu pause
         UICanvasManager.Instance.PageController.TurnPageOn(pauseMenuUI);
-        UICanvasManager.Instance.EventSystem.SetSelectedGameObject(menuButtons[0].gameObject);
+        //UICanvasManager.Instance.EventSystem.SetSelectedGameObject(menuButtons[0].gameObject);
 
         // Arrêter le temps
         Time.timeScale = 0;
@@ -114,12 +114,13 @@ public class PauseMenu : MonoBehaviour
         //settingsMenu.SetActive(true);
     }
 
-    public void LoadMainMenu()
+    public void QuitGame()
     {
         ResumeAction();
         AudioController.Instance.StopAllMusics();
         canPause = false;
         //SceneLoader.Instance.ActiveLoadingScreen(mainMenuSceneData, 1.0f);
-        SceneLoader.Instance.ChangeScene(mainMenuSceneData.sceneToLoad);
+        //SceneLoader.Instance.ChangeScene(mainMenuSceneData.sceneToLoad);
+        GameCore.Instance.EndGame();
     }
 }
