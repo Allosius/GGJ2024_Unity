@@ -31,15 +31,9 @@ public class FirstPersonCharacterGrabObjectsController : MonoBehaviour
     private void Update()
     {
         // Execute logic only on button pressed
-        if (Input.GetMouseButtonDown(1))
+        if (Input.GetMouseButtonDown(0))
         {
-            // Check if player picked some item already
-            if (pickedItem)
-            {
-                // If yes, drop picked item
-                DropItem(pickedItem);
-            }
-            else
+            if(!pickedItem)
             {
                 // If no, try to pick item in front of the player
                 // Create ray from center of the screen
@@ -58,26 +52,35 @@ public class FirstPersonCharacterGrabObjectsController : MonoBehaviour
                     }
                 }
             }
-        }
-
-        if (Input.GetMouseButtonDown(0))
-        {
-            if (playerInteraction.GetCurrentTapirInRange() == false)
-            {
-                if (pickedItem && pickedItem.Animator)
-                {
-                    pickedItem.Animator.enabled = true;
-                    pickedItem.Animator.SetTrigger("Shake");
-                    pickedItem.OnAttractionItem(GameCore.Instance.tapir);
-                }
-            }
             else
             {
-                if (playerInteraction.CurrentTapirInRange && pickedItem && playerInteraction.CurrentTapirInRange.canAbsorbObject)
+                if (playerInteraction.GetCurrentTapirInRange() == false)
                 {
-                    playerInteraction.CurrentTapirInRange.AbsorbPickableItem(pickedItem);
-                    pickedItem = null;
+                    if (pickedItem && pickedItem.Animator)
+                    {
+                        pickedItem.Animator.enabled = true;
+                        pickedItem.Animator.SetTrigger("Shake");
+                        pickedItem.OnAttractionItem(GameCore.Instance.tapir);
+                    }
                 }
+                else
+                {
+                    if (playerInteraction.CurrentTapirInRange && pickedItem && playerInteraction.CurrentTapirInRange.canAbsorbObject)
+                    {
+                        playerInteraction.CurrentTapirInRange.AbsorbPickableItem(pickedItem);
+                        pickedItem = null;
+                    }
+                }
+            }
+        }
+
+        if (Input.GetMouseButtonDown(1))
+        {
+            // Check if player picked some item already
+            if (pickedItem)
+            {
+                // If yes, drop picked item
+                DropItem(pickedItem);
             }
         }
     }
