@@ -44,15 +44,6 @@ public class GameCore : AllosiusDevUtilities.Singleton<GameCore>
     private void Update()
     {
         UpdateTimer();
-        
-#if UNITY_EDITOR
-        
-        if (Input.GetKeyDown(SFPSC_KeyManager.QuitPlayMode))
-        {
-            Debug.Log("Quit Play Mode");
-            EditorApplication.ExitPlaymode();
-        }
-#endif
     }
 
     public void UpdateTimer()

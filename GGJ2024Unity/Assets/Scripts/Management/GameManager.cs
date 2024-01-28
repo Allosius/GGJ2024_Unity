@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using AllosiusDevUtilities;
+using UnityEditor;
 using UnityEngine;
 
 public class GameManager : Singleton<GameManager>
@@ -14,6 +15,18 @@ public class GameManager : Singleton<GameManager>
 
     public event Action SetScoreEvent;
     public event Action SetTimerEvent;
+
+    private void Update()
+    {
+#if UNITY_EDITOR
+        
+        if (Input.GetKeyDown(SFPSC_KeyManager.QuitPlayMode))
+        {
+            Debug.Log("Quit Play Mode");
+            EditorApplication.ExitPlaymode();
+        }
+#endif
+    }
 
     public void SetCurrentScore(int value)
     {

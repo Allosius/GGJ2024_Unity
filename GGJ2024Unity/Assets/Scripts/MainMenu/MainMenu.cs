@@ -74,7 +74,7 @@ public class MainMenu : MonoBehaviour
             continueActive = false;
         }*/
 
-        UICanvasManager.Instance.EventSystem.SetSelectedGameObject(menuButtons[0].gameObject);
+        //UICanvasManager.Instance.EventSystem.SetSelectedGameObject(menuButtons[0].gameObject);
     }
 
     // Update is called once per frame
