@@ -5,11 +5,21 @@ using UnityEngine;
 
 public enum AttractionItemType
 {
+    None,
     TapirSits,
     TapirFlees,
     TapirFollows,
     TapirAttacks,
     PlayMusic,
+}
+
+public enum AbsorptionEffectItemType
+{
+    None,
+    InstantSneeze,
+    SuperSneeze,
+    ChangeTapirMaterial,
+    AddAdditionnalsFeedbacks,
 }
 
 [RequireComponent(typeof(FeedbacksReader))]
@@ -31,15 +41,21 @@ public class PickableItem : MonoBehaviour
     
     
     //public bool isSneezing { get; set; }
+    
+    public TapirController currentTapir { get; set; }
 
 
     [SerializeField] private AttractionItemType attractionItemType;
+    
+    [SerializeField] private AbsorptionEffectItemType absorptionEffectItemType;
 
     [SerializeField] private FeedbacksData[] attractionFeedbacks;
 
     [SerializeField] private int tapirFillGaugeAmount = 10;
 
     [SerializeField] private float absorbMoveSpeedItem = 10.0f;
+    
+    [SerializeField] private FeedbacksData[] onTapirCollisionFeedbacks;
 
     /// <summary>
     /// Method called on initialization.
@@ -68,6 +84,8 @@ public class PickableItem : MonoBehaviour
        
         switch (attractionItemType)
         {
+            case AttractionItemType.None:
+                break;
             case AttractionItemType.TapirSits:
                 break;
             case AttractionItemType.TapirFlees:
@@ -78,6 +96,71 @@ public class PickableItem : MonoBehaviour
                 break;
             case AttractionItemType.PlayMusic:
                 break;
+        }
+    }
+
+    public void OnIsAbsorbedItem(bool isOn, TapirController tapir)
+    {
+        if (isOn)
+        {
+            currentTapir = tapir;
+            
+            switch (absorptionEffectItemType)
+            {
+                case AbsorptionEffectItemType.None:
+                    break;
+                case AbsorptionEffectItemType.InstantSneeze:
+                    tapir.OnEndAbsorption += SetInstantSneeze;
+                    break;
+                case AbsorptionEffectItemType.SuperSneeze:
+                    break;
+                case AbsorptionEffectItemType.ChangeTapirMaterial:
+                    break;
+                case AbsorptionEffectItemType.AddAdditionnalsFeedbacks:
+                    tapir.OnEnterCollisionWithObject += PlayFeedbacksOnTapirCollision;
+                    break;
+            }
+        }
+        else
+        {
+            currentTapir = null;
+            
+            switch (absorptionEffectItemType)
+            {
+                case AbsorptionEffectItemType.None:
+                    break;
+                case AbsorptionEffectItemType.InstantSneeze:
+                    tapir.OnEndAbsorption -= SetInstantSneeze;
+                    break;
+                case AbsorptionEffectItemType.SuperSneeze:
+                    break;
+                case AbsorptionEffectItemType.ChangeTapirMaterial:
+                    break;
+                case AbsorptionEffectItemType.AddAdditionnalsFeedbacks:
+                    tapir.OnEnterCollisionWithObject -= PlayFeedbacksOnTapirCollision;
+                    break;
+            }
+        }
+    }
+
+    public void PlayFeedbacksOnTapirCollision()
+    {
+        for (int i = 0; i < onTapirCollisionFeedbacks.Length; i++)
+        {
+            feedbacksReader.ReadFeedback(onTapirCollisionFeedbacks[i]);
+        }
+    }
+
+    public void SetInstantSneeze(bool value)
+    {
+        if (!value)
+        {
+            if (currentTapir == null)
+            {
+                return;
+            }
+        
+            currentTapir.Sneeze();
         }
     }
 }

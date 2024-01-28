@@ -80,6 +80,10 @@ public class TapirController : MonoBehaviour
 
     [SerializeField] private float sneezeFillGaugeAmount = 100f;
 
+    
+    public event Action OnEnterCollisionWithObject;
+    public event Action<bool> OnEndAbsorption;
+    
     private void Start()
     {
         feedbacksReader = GetComponent<FeedbacksReader>();
@@ -171,6 +175,7 @@ public class TapirController : MonoBehaviour
         if (pickableItemsAbsorbed.Contains(item) == false)
         {
             pickableItemsAbsorbed.Add(item);
+            item.OnIsAbsorbedItem(true, this);
 
             fillGaugeProgress += item.TapirFillGaugeAmount;
             fillGaugeProgress = Mathf.Clamp(fillGaugeProgress, 0, 100);
@@ -192,13 +197,12 @@ public class TapirController : MonoBehaviour
         if (fillGaugeProgress >= sneezeFillGaugeAmount)
         {
             Sneeze();
+            OnEndAbsorption?.Invoke(true);
         }
         else
         {
             canAbsorbObject = true;
-            
-            // currentAiState = TapirAIState.Patrol;
-            // UpdateAiState();
+            OnEndAbsorption?.Invoke(false);
         }
     }
 
@@ -222,6 +226,8 @@ public class TapirController : MonoBehaviour
 
         for (int i = 0; i < pickableItemsAbsorbed.Count; i++)
         {
+            pickableItemsAbsorbed[i].OnIsAbsorbedItem(false, this);
+            
             pickableItemsAbsorbed[i].gameObject.layer = 8;
             pickableItemsAbsorbed[i].transform.parent = null;
             pickableItemsAbsorbed[i].transform.position = sneezePoint.position;
@@ -297,6 +303,11 @@ public class TapirController : MonoBehaviour
         }
         UpdateAiState();
         StartCoroutine(SittingTimerCoroutine());
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        OnEnterCollisionWithObject?.Invoke();
     }
 
     private void OnDrawGizmos()
