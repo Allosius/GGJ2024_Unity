@@ -25,6 +25,8 @@
 */
 using System.Collections;
 using System.Collections.Generic;
+using AllosiusDevCore;
+using AllosiusDevUtilities.Core;
 using UnityEngine;
 
 [RequireComponent(typeof(Camera))]
@@ -55,9 +57,19 @@ public class SFPSC_FPSCamera : MonoBehaviour
     public float rotZ = 0.0f;
     private void Update()
     {
-        // Mouse input
-        mouseX = Input.GetAxis("Mouse X") * sensitivity;
-        mouseY = Input.GetAxis("Mouse Y") * sensitivity;
+        if (GameStateManager.gameIsPaused)
+        {
+            // Mouse input
+            mouseX = 0;
+            mouseY = 0;
+        }
+        else
+        {
+            // Mouse input
+            mouseX = Input.GetAxis("Mouse X") * sensitivity;
+            mouseY = Input.GetAxis("Mouse Y") * sensitivity;
+        }
+        
 
         // Calculations
         rotX -= mouseY;
