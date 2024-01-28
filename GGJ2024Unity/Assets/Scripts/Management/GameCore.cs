@@ -10,6 +10,8 @@ using AllosiusDevCore;
 
 public class GameCore : AllosiusDevUtilities.Singleton<GameCore>
 {
+    private bool gameEnded = false;
+    
     public TapirController tapir { get; protected set; }
     
     public PlayerInteraction player { get; protected set; }
@@ -17,6 +19,8 @@ public class GameCore : AllosiusDevUtilities.Singleton<GameCore>
     public float gameDuration = 60;
 
     public AudioData Mainmusic;
+    
+    [SerializeField] private SceneData endGameSceneData;
 
     private void Start()
     {
@@ -57,5 +61,18 @@ public class GameCore : AllosiusDevUtilities.Singleton<GameCore>
         {
             GameManager.Instance.ChangeCurrentTimer(-Time.deltaTime);
         }
+        else if (gameEnded == false)
+        {
+            gameEnded = true;
+            
+            EndGame();
+        }
+    }
+
+    public void EndGame()
+    {
+        gameEnded = true;
+        
+        SceneLoader.Instance.ChangeScene(endGameSceneData.sceneToLoad);
     }
 }

@@ -36,6 +36,8 @@ public class TapirController : MonoBehaviour
 
     private PickableItem currentFollowTarget;
     
+    private Transform currentFleeTarget;
+    
     private PlayerInteraction currentPlayerInteraction;
 
     private PickableItem currentItemAbsorbing;
@@ -57,6 +59,8 @@ public class TapirController : MonoBehaviour
     public Rigidbody Rb => rb;
 
     public bool canAbsorbObject { get; set; } = true;
+
+    public bool IsSneezing => isSneezing;
     
     [SerializeField] private bool drawGizmos = true;
 
@@ -76,7 +80,7 @@ public class TapirController : MonoBehaviour
 
     [SerializeField] private float sittingTimer = 2.0f;
 
-    [SerializeField] private float angerSpeed = 4.0f;
+    [SerializeField] private float fleeSpeed = 4.0f;
     
     [SerializeField] private float followTargetSpeed = 3.0f;
     [SerializeField] private float followTargetTimer = 3.0f;
@@ -123,7 +127,18 @@ public class TapirController : MonoBehaviour
                 
                 break;
             case TapirMovementState.Flee:
-                
+                if (currentFleeTarget != null)
+                {
+                    float targetDist = Vector3.Distance(transform.position, currentFleeTarget.position);
+                    if (targetDist < 0.5f)
+                    {
+                        FleeTarget(null, false);
+                    }
+                    else
+                    {
+                        patrolAI.agent.SetDestination(currentFleeTarget.position);
+                    }
+                }
                 break;
             case TapirMovementState.FollowTarget:
                 if (currentFollowTarget != null)
@@ -201,6 +216,11 @@ public class TapirController : MonoBehaviour
 
     public void FollowTarget(PickableItem target)
     {
+        if (isSneezing)
+        {
+            return;;
+        }
+        
         currentFollowTarget = target;
         
         currentAiState = TapirAIState.None;
@@ -227,6 +247,44 @@ public class TapirController : MonoBehaviour
             currentAiState = TapirAIState.Patrol;
             UpdateAiState();
         }
+    }
+
+    public void FleeTarget(Transform target, bool activeFlee)
+    {
+        if (isSneezing)
+        {
+            return;
+        }
+
+        if (activeFlee)
+        {
+            StopCoroutine(FollowTargetCoroutine(currentFollowTarget));
+        
+            currentFollowTarget = null;
+        
+            currentAiState = TapirAIState.None;
+            UpdateAiState();
+
+            currentFleeTarget = target;
+        
+            currentMovementState = TapirMovementState.Flee;
+
+            patrolAI.agent.enabled = true;
+            patrolAI.agent.speed = fleeSpeed;
+        }
+        else
+        {
+            if (currentMovementState == TapirMovementState.Flee)
+            {
+                currentFleeTarget = null;
+                
+                currentMovementState = TapirMovementState.Default;
+        
+                currentAiState = TapirAIState.Patrol;
+                UpdateAiState();
+            }
+        }
+
     }
 
     public void AbsorbPickableItem(PickableItem item)
@@ -303,6 +361,8 @@ public class TapirController : MonoBehaviour
         Debug.Log("Sneeze");
         
         animator.SetTrigger("isSneezing");
+        
+        OnEnterCollisionWithObject?.Invoke();
 
         yield return new WaitForSeconds(0.4f);
 

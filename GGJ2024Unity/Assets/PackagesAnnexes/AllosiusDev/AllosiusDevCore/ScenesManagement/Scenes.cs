@@ -5,6 +5,7 @@
         BootScene,
         MainMenu,
         Level,
-        CreditsScene
+        CreditsScene,
+        EndGame,
     }
 }
