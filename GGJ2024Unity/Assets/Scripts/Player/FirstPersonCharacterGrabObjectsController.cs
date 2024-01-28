@@ -31,7 +31,7 @@ public class FirstPersonCharacterGrabObjectsController : MonoBehaviour
     private void Update()
     {
         // Execute logic only on button pressed
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(1))
         {
             // Check if player picked some item already
             if (pickedItem)
@@ -60,7 +60,7 @@ public class FirstPersonCharacterGrabObjectsController : MonoBehaviour
             }
         }
 
-        if (Input.GetMouseButtonDown(1))
+        if (Input.GetMouseButtonDown(0))
         {
             if (playerInteraction.GetCurrentTapirInRange() == false)
             {

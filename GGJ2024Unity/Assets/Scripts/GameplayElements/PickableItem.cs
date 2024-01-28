@@ -25,6 +25,8 @@ public enum AbsorptionEffectItemType
 [RequireComponent(typeof(FeedbacksReader))]
 public class PickableItem : MonoBehaviour
 {
+    private bool hasAlreadyApplyTapirCollisionsBind;
+    
     private FeedbacksReader feedbacksReader;
     
     // Reference to the rigidbody
@@ -118,7 +120,11 @@ public class PickableItem : MonoBehaviour
                 case AbsorptionEffectItemType.ChangeTapirMaterial:
                     break;
                 case AbsorptionEffectItemType.AddAdditionnalsFeedbacks:
-                    tapir.OnEnterCollisionWithObject += PlayFeedbacksOnTapirCollision;
+                    if (hasAlreadyApplyTapirCollisionsBind == false)
+                    {
+                        tapir.OnEnterCollisionWithObject += PlayFeedbacksOnTapirCollision;
+                        hasAlreadyApplyTapirCollisionsBind = true;
+                    }
                     break;
             }
         }
@@ -138,7 +144,7 @@ public class PickableItem : MonoBehaviour
                 case AbsorptionEffectItemType.ChangeTapirMaterial:
                     break;
                 case AbsorptionEffectItemType.AddAdditionnalsFeedbacks:
-                    tapir.OnEnterCollisionWithObject -= PlayFeedbacksOnTapirCollision;
+                    //tapir.OnEnterCollisionWithObject -= PlayFeedbacksOnTapirCollision;
                     break;
             }
         }

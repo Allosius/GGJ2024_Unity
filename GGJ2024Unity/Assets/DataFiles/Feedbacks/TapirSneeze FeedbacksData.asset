@@ -21,4 +21,40 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes: []
-  feedbacks: []
+  feedbacks:
+  - Type: 2
+    feedbackWait:
+      IsActive: 1
+      waitTime: 0
+    feedbackPlaySound:
+      IsActive: 1
+      audioData: {fileID: 11400000, guid: f64b712598b166e45b6e126c67f3c944, type: 2}
+    feedbackInstantiateObject:
+      IsActive: 1
+      objectToInstantiate: {fileID: 0}
+      objectPositionOffset: {x: 0, y: 0, z: 0}
+    feedbackChangeColorSprite:
+      IsActive: 1
+      newSpriteColor: {r: 0, g: 0, b: 0, a: 0}
+    feedbackTimerChangeColorSprite:
+      IsActive: 1
+      newSpriteColor: {r: 0, g: 0, b: 0, a: 0}
+      colorChangeDuration: 0.1
+  - Type: 3
+    feedbackWait:
+      IsActive: 1
+      waitTime: 0
+    feedbackPlaySound:
+      IsActive: 1
+      audioData: {fileID: 0}
+    feedbackInstantiateObject:
+      IsActive: 0
+      objectToInstantiate: {fileID: 5800856643976696643, guid: 34e7677d2208c2643b80b841bf6f625e, type: 3}
+      objectPositionOffset: {x: 0, y: 0, z: 0}
+    feedbackChangeColorSprite:
+      IsActive: 1
+      newSpriteColor: {r: 0, g: 0, b: 0, a: 0}
+    feedbackTimerChangeColorSprite:
+      IsActive: 1
+      newSpriteColor: {r: 0, g: 0, b: 0, a: 0}
+      colorChangeDuration: 0.1

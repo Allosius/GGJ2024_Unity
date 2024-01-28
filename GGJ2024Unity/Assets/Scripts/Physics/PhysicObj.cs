@@ -1,16 +1,26 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using AllosiusDevCore;
 using UnityEngine;
 
+[RequireComponent(typeof(FeedbacksReader))]
 public class PhysicObj : MonoBehaviour
 {
+    private FeedbacksReader feedbacksReader;
+    
     public bool hasTotalPhysic { get; set; } = false;
+
+    public FeedbacksReader FeedbacksReader => feedbacksReader;
     
     public Rigidbody Rb;
 
+    public FeedbacksData WithCharacterCollisionFeedbacks;
+
     private void Start()
     {
+        feedbacksReader = GetComponent<FeedbacksReader>();
+        
         if (hasTotalPhysic)
         {
             Rb.constraints = RigidbodyConstraints.None;
@@ -24,8 +34,17 @@ public class PhysicObj : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
+        PlayerInteraction player = collision.gameObject.GetComponent<PlayerInteraction>();
         TapirController tapir = collision.gameObject.GetComponent<TapirController>();
 
+        if (player || tapir)
+        {
+            if (WithCharacterCollisionFeedbacks != null)
+            {
+                feedbacksReader.ReadFeedback(WithCharacterCollisionFeedbacks);
+            }
+        }
+        
         if (tapir != null && hasTotalPhysic == false)
         {
             Debug.Log("On Collision Enter Tapir");
