@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class PlayerInteraction : MonoBehaviour
 {
+    public Transform posPoint;
+    
     private TapirController currentTapirInRange;
 
     public TapirController CurrentTapirInRange => currentTapirInRange;

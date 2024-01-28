@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using AllosiusDevCore;
 using DG.Tweening;
 using Sirenix.Serialization;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -19,6 +20,7 @@ public enum TapirMovementState
     Default,
     Flee,
     Charge,
+    FollowTarget,
 }
 
 [RequireComponent(typeof(FeedbacksReader))]
@@ -31,15 +33,17 @@ public class TapirController : MonoBehaviour
     private Collider collider;
 
     private PatrolAI patrolAI;
+
+    private PickableItem currentFollowTarget;
     
     private PlayerInteraction currentPlayerInteraction;
 
     private PickableItem currentItemAbsorbing;
     private List<PickableItem> pickableItemsAbsorbed = new List<PickableItem>();
 
-    private TapirAIState currentAiState = TapirAIState.Patrol;
+    public TapirAIState currentAiState = TapirAIState.Patrol;
 
-    private TapirMovementState currentMovementState = TapirMovementState.Default;
+    public TapirMovementState currentMovementState = TapirMovementState.Default;
 
     private Transform currentTargetObject;
     private Vector3 currentTargetPosition;
@@ -69,10 +73,13 @@ public class TapirController : MonoBehaviour
     [SerializeField] private Transform sneezePoint;
     
     [SerializeField] private float patrolTimer = 10.0f;
-    
+
     [SerializeField] private float sittingTimer = 2.0f;
 
-    [SerializeField] private float angerSpeed = 10.0f;
+    [SerializeField] private float angerSpeed = 4.0f;
+    
+    [SerializeField] private float followTargetSpeed = 3.0f;
+    [SerializeField] private float followTargetTimer = 3.0f;
 
     [SerializeField] private FeedbacksData sneezeFeedbacks;
 
@@ -84,7 +91,7 @@ public class TapirController : MonoBehaviour
 
     [SerializeField] private int sneezeFillGaugeAmount = 100;
     
-    [FormerlySerializedAs("sneezeAbsolumeMaxFillGaugeAmount")] [SerializeField] private int sneezeAbsoluteMaxFillGaugeAmount = 300;
+    [SerializeField] private int sneezeAbsoluteMaxFillGaugeAmount = 300;
 
     
     public event Action OnEnterCollisionWithObject;
@@ -103,6 +110,37 @@ public class TapirController : MonoBehaviour
         UpdateAiState();
         
         StartCoroutine(SittingTimerCoroutine());
+    }
+
+    private void Update()
+    {
+        switch (currentMovementState)
+        {
+            case TapirMovementState.Default :
+                
+                break;
+            case TapirMovementState.Charge:
+                
+                break;
+            case TapirMovementState.Flee:
+                
+                break;
+            case TapirMovementState.FollowTarget:
+                if (currentFollowTarget != null)
+                {
+                    if (GameCore.Instance.player.GetComponent<FirstPersonCharacterGrabObjectsController>().pickedItem ==
+                        currentFollowTarget)
+                    {
+                        patrolAI.agent.SetDestination(GameCore.Instance.player.posPoint.transform.position);
+                    }
+                    else
+                    {
+                        patrolAI.agent.SetDestination(currentFollowTarget.transform.position);
+                    }
+                    
+                }
+                break;
+        }
     }
 
     private void FixedUpdate()
@@ -161,12 +199,50 @@ public class TapirController : MonoBehaviour
         }
     }
 
-    public void AbsorbPickableItem(PickableItem item)
+    public void FollowTarget(PickableItem target)
     {
-        canAbsorbObject = false;
+        currentFollowTarget = target;
         
         currentAiState = TapirAIState.None;
         UpdateAiState();
+        
+        currentMovementState = TapirMovementState.FollowTarget;
+
+        patrolAI.agent.enabled = true;
+        patrolAI.agent.speed = followTargetSpeed;
+
+        StartCoroutine(FollowTargetCoroutine(target));
+    }
+
+    private IEnumerator FollowTargetCoroutine(PickableItem transform)
+    {
+        yield return new WaitForSeconds(followTargetTimer);
+
+        if (currentMovementState == TapirMovementState.FollowTarget)
+        {
+            currentFollowTarget = null;
+        
+            currentMovementState = TapirMovementState.Default;
+        
+            currentAiState = TapirAIState.Patrol;
+            UpdateAiState();
+        }
+    }
+
+    public void AbsorbPickableItem(PickableItem item)
+    {
+        canAbsorbObject = false;
+
+        StopCoroutine(FollowTargetCoroutine(currentFollowTarget));
+        
+        currentFollowTarget = null;
+        
+        currentMovementState = TapirMovementState.Default;
+        
+        currentAiState = TapirAIState.None;
+        UpdateAiState();
+
+        patrolAI.agent.enabled = false;
 
         if (currentPlayerInteraction != null)
         {
@@ -270,13 +346,13 @@ public class TapirController : MonoBehaviour
         isSneezing = true;
     }
 
-    public void SpitOutPickableItem(PickableItem item)
-    {
-        if (pickableItemsAbsorbed.Contains(item))
-        {
-            pickableItemsAbsorbed.Remove(item);
-        }
-    }
+    // public void SpitOutPickableItem(PickableItem item)
+    // {
+    //     if (pickableItemsAbsorbed.Contains(item))
+    //     {
+    //         pickableItemsAbsorbed.Remove(item);
+    //     }
+    // }
     
     IEnumerator SittingTimerCoroutine()
     {

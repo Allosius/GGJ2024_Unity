@@ -9,6 +9,8 @@ using UnityEngine;
 public class GameCore : AllosiusDevUtilities.Singleton<GameCore>
 {
     public TapirController tapir { get; protected set; }
+    
+    public PlayerInteraction player { get; protected set; }
 
     private void Start()
     {
@@ -16,6 +18,7 @@ public class GameCore : AllosiusDevUtilities.Singleton<GameCore>
         Cursor.lockState = CursorLockMode.Confined;
 
         tapir = FindObjectOfType<TapirController>();
+        player = FindObjectOfType<PlayerInteraction>();
 
         GameManager.Instance.currentScore = 0;
     }
