@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,6 +9,12 @@ using AllosiusDevCore;
 
 public class CreditsMenu : MonoBehaviour
 {
+    private void Start()
+    {
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
+    }
+
     public void MainMenuButton()
     {
         SceneLoader.Instance.ChangeScene(Scenes.MainMenu);
