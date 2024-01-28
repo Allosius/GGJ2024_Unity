@@ -337,7 +337,7 @@ public class TapirController : MonoBehaviour
         float angle = Mathf.Rad2Deg * Mathf.Atan2(direction.y, direction.x);
         direction.Normalize();
         direction = Quaternion.Euler(0f, 0f, -angle + sneezeEjectionAngle) * direction;
-        rb.velocity = (new Vector3(-direction.x * fillGaugeProgress, sneezeVerticalForce, -direction.z * fillGaugeProgress) * sneezeForceMagnitude);
+        rb.velocity = (new Vector3(-direction.x * sneezeForceMagnitude, sneezeVerticalForce, -direction.z * sneezeForceMagnitude)) * fillGaugeProgress;
 
         fillGaugeProgress = 0;
         

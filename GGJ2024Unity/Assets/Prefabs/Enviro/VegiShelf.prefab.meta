@@ -1,6 +1,12 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:GGJ2024Unity/Assets/Prefabs/Enviro/VegiShelf.prefab.meta
 guid: 0299ac6a051fc3345aaa462c4c0c0869
 PrefabImporter:
+========
+guid: 70b7b78a2499b9b4594302aedd65dafb
+folderAsset: yes
+DefaultImporter:
+>>>>>>>> 82fc95a2f9e7395d3349b073b54369fcf3ed9b44:GGJ2024Unity/Assets/Plugins/Sirenix/Odin Inspector/Modules/Unity.Mathematics.meta
   externalObjects: {}
   userData: 
   assetBundleName: 
