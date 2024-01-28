@@ -6,6 +6,8 @@ public class PatrolAI : MonoBehaviour
 {
     private bool walkPointSet;
     private bool canPatrol;
+    
+    [SerializeField] private float patrolSpeed = 2.0f;
 
     [SerializeField] private float walkPointRange = 2.2f;
 
@@ -18,9 +20,12 @@ public class PatrolAI : MonoBehaviour
 
     public NavMeshAgent agent;
 
+    public TapirController tapirController;
+
     private void Start()
     {
         agent.enabled = true;
+        agent.speed = patrolSpeed;
         StartCoroutine(RelaunchSearchWalkPoint());
     }
 
@@ -34,11 +39,12 @@ public class PatrolAI : MonoBehaviour
         canPatrol = value;
         if (canPatrol)
         {
+            agent.speed = patrolSpeed;
             agent.enabled = true;
         }
         else
         {
-            if (agent.enabled)
+            if (agent.enabled && tapirController.currentMovementState != TapirMovementState.FollowTarget)
             {
                 agent.SetDestination(transform.position);
                 agent.enabled = false;

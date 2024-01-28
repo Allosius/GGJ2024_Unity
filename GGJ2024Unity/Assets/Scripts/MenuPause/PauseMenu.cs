@@ -73,6 +73,9 @@ public class PauseMenu : MonoBehaviour
     public void Paused()
     {
         Debug.Log("Pause");
+        
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
 
         //Afficher le menu pause
         UICanvasManager.Instance.PageController.TurnPageOn(pauseMenuUI);
@@ -92,6 +95,9 @@ public class PauseMenu : MonoBehaviour
     public void Resume()
     {
         Debug.Log("Resume");
+        
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Confined;
 
         Time.timeScale = 1;
 
@@ -113,6 +119,7 @@ public class PauseMenu : MonoBehaviour
         ResumeAction();
         AudioController.Instance.StopAllMusics();
         canPause = false;
-        SceneLoader.Instance.ActiveLoadingScreen(mainMenuSceneData, 1.0f);
+        //SceneLoader.Instance.ActiveLoadingScreen(mainMenuSceneData, 1.0f);
+        SceneLoader.Instance.ChangeScene(mainMenuSceneData.sceneToLoad);
     }
 }

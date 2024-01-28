@@ -13,7 +13,7 @@ public class FirstPersonCharacterGrabObjectsController : MonoBehaviour
     [SerializeField]
     private Transform slot;
     // Reference to the currently held item.
-    private PickableItem pickedItem;
+    public PickableItem pickedItem { get; protected set; }
 
 
     public float grabRayLength = 0.5f;

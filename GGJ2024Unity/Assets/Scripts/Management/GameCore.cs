@@ -9,6 +9,10 @@ using UnityEngine;
 public class GameCore : AllosiusDevUtilities.Singleton<GameCore>
 {
     public TapirController tapir { get; protected set; }
+    
+    public PlayerInteraction player { get; protected set; }
+
+    public float gameDuration = 60;
 
     private void Start()
     {
@@ -16,12 +20,20 @@ public class GameCore : AllosiusDevUtilities.Singleton<GameCore>
         Cursor.lockState = CursorLockMode.Confined;
 
         tapir = FindObjectOfType<TapirController>();
+        player = FindObjectOfType<PlayerInteraction>();
 
-        GameManager.Instance.currentScore = 0;
+        GameManager.Instance.SetCurrentScore(0);
+        GameManager.Instance.SetCurrentTimer(gameDuration);
+        
+        GameCanvasManager.Instance.UpdateScore();
+        GameCanvasManager.Instance.UpdateTimer();
+        
     }
 
     private void Update()
     {
+        UpdateTimer();
+        
 #if UNITY_EDITOR
         
         if (Input.GetKeyDown(SFPSC_KeyManager.QuitPlayMode))
@@ -30,5 +42,13 @@ public class GameCore : AllosiusDevUtilities.Singleton<GameCore>
             EditorApplication.ExitPlaymode();
         }
 #endif
+    }
+
+    public void UpdateTimer()
+    {
+        if (GameManager.Instance.currentTimer > 0)
+        {
+            GameManager.Instance.ChangeCurrentTimer(-Time.deltaTime);
+        }
     }
 }

@@ -91,6 +91,7 @@ public class PickableItem : MonoBehaviour
             case AttractionItemType.TapirFlees:
                 break;
             case AttractionItemType.TapirFollows:
+                tapir.FollowTarget(this);
                 break;
             case AttractionItemType.TapirAttacks:
                 break;
