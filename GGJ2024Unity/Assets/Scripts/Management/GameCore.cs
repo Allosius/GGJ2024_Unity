@@ -5,6 +5,8 @@ using Unity.VisualScripting;
 using Unity.VisualScripting.FullSerializer;
 using UnityEditor;
 using UnityEngine;
+using AllosiusDevUtilities.Audio;
+using AllosiusDevCore;
 
 public class GameCore : AllosiusDevUtilities.Singleton<GameCore>
 {
@@ -14,19 +16,24 @@ public class GameCore : AllosiusDevUtilities.Singleton<GameCore>
 
     public float gameDuration = 60;
 
+    public AudioData Mainmusic;
+
     private void Start()
     {
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Confined;
-
+        
         tapir = FindObjectOfType<TapirController>();
         player = FindObjectOfType<PlayerInteraction>();
 
         GameManager.Instance.SetCurrentScore(0);
         GameManager.Instance.SetCurrentTimer(gameDuration);
+        GameManager.Instance.tapirIsCaptured = false;
         
         GameCanvasManager.Instance.UpdateScore();
         GameCanvasManager.Instance.UpdateTimer();
+
+        AudioController.Instance.PlayAudio(Mainmusic);
         
     }
 

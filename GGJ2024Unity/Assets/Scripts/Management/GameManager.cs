@@ -10,6 +10,8 @@ public class GameManager : Singleton<GameManager>
     
     public float currentTimer { get; set; }
 
+    public bool tapirIsCaptured { get; set; }
+
     public event Action SetScoreEvent;
     public event Action SetTimerEvent;
 
