@@ -12,6 +12,9 @@ EditorBuildSettings:
     path: Assets/Scenes/Menus/TitleScreen.unity
     guid: f76bfd68ca2ce5f428bb4edbd2a256fe
   - enabled: 1
+    path: Assets/Scenes/MainLevel.unity
+    guid: aebda678d3ec7094dba594a4c384d704
+  - enabled: 0
     path: Assets/Scenes/Level/LevelProg.unity
     guid: a9e42c6a2f7a0a046b500ec6023035c3
   - enabled: 0
@@ -20,4 +23,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Menus/CreditsScene.unity
     guid: 395a0cda6e05ddb45aa1b315294820dd
+  - enabled: 1
+    path: Assets/Scenes/Menus/EndGameScene.unity
+    guid: 75df75173d35f764f83297440098a44c
   m_configObjects: {}

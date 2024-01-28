@@ -28,6 +28,7 @@ public class GameCore : AllosiusDevUtilities.Singleton<GameCore>
 
         GameManager.Instance.SetCurrentScore(0);
         GameManager.Instance.SetCurrentTimer(gameDuration);
+        GameManager.Instance.tapirIsCaptured = false;
         
         GameCanvasManager.Instance.UpdateScore();
         GameCanvasManager.Instance.UpdateTimer();
