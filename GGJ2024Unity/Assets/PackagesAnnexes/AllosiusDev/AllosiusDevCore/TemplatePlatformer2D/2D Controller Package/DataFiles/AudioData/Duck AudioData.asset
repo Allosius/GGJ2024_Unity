@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6151fd00d781a7a46a8d4399e32151bc, type: 3}
   m_Name: Duck AudioData
   m_EditorClassIdentifier: 
-  clip: {fileID: 8300000, guid: b91d6ebd56203484d9565365bbaaa970, type: 3}
+  clip: {fileID: 8300000, guid: a561dc6cf2dbdcb449a1909f17e66ed0, type: 3}
   typeSound: 0
   pitch: 1
   loop: 0
