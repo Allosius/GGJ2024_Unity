@@ -48,6 +48,10 @@ public class TapirController : MonoBehaviour
 
     private bool isSneezing;
 
+    public FeedbacksReader FeedbacksReader => feedbacksReader;
+
+    public Rigidbody Rb => rb;
+
     public bool canAbsorbObject { get; set; } = true;
     
     [SerializeField] private bool drawGizmos = true;
@@ -78,7 +82,9 @@ public class TapirController : MonoBehaviour
     
     [SerializeField] private float sneezeItemsEjectionAngleVariance = 45f;
 
-    [SerializeField] private float sneezeFillGaugeAmount = 100f;
+    [SerializeField] private int sneezeFillGaugeAmount = 100;
+    
+    [FormerlySerializedAs("sneezeAbsolumeMaxFillGaugeAmount")] [SerializeField] private int sneezeAbsoluteMaxFillGaugeAmount = 300;
 
     
     public event Action OnEnterCollisionWithObject;
@@ -178,7 +184,7 @@ public class TapirController : MonoBehaviour
             item.OnIsAbsorbedItem(true, this);
 
             fillGaugeProgress += item.TapirFillGaugeAmount;
-            fillGaugeProgress = Mathf.Clamp(fillGaugeProgress, 0, 100);
+            fillGaugeProgress = Mathf.Clamp(fillGaugeProgress, 0, sneezeAbsoluteMaxFillGaugeAmount);
         }
     }
 
@@ -255,7 +261,7 @@ public class TapirController : MonoBehaviour
         float angle = Mathf.Rad2Deg * Mathf.Atan2(direction.y, direction.x);
         direction.Normalize();
         direction = Quaternion.Euler(0f, 0f, -angle + sneezeEjectionAngle) * direction;
-        rb.velocity = (new Vector3(-direction.x, sneezeVerticalForce, -direction.z) * sneezeForceMagnitude) * fillGaugeProgress;
+        rb.velocity = (new Vector3(-direction.x * fillGaugeProgress, sneezeVerticalForce, -direction.z * fillGaugeProgress) * sneezeForceMagnitude);
 
         fillGaugeProgress = 0;
         

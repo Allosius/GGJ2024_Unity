@@ -145,9 +145,16 @@ public class PickableItem : MonoBehaviour
 
     public void PlayFeedbacksOnTapirCollision()
     {
+        if (currentTapir == null)
+        {
+            return;
+        }
+        
+        Debug.Log(gameObject.name + " Play Feedbacks On Tapir Collision");
+        
         for (int i = 0; i < onTapirCollisionFeedbacks.Length; i++)
         {
-            feedbacksReader.ReadFeedback(onTapirCollisionFeedbacks[i]);
+            currentTapir.FeedbacksReader.ReadFeedback(onTapirCollisionFeedbacks[i]);
         }
     }
 
