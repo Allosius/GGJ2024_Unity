@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using AllosiusDevCore;
+using AllosiusDevUtilities.Audio;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 public enum AttractionItemType
@@ -48,6 +50,12 @@ public class PickableItem : MonoBehaviour
 
 
     [SerializeField] private AttractionItemType attractionItemType;
+    
+    [ShowIf("attractionItemType", AttractionItemType.PlayMusic)]
+    [SerializeField] private AudioData attractionMusicToPlay;
+    
+    [ShowIf("attractionItemType", AttractionItemType.PlayMusic)]
+    [SerializeField] private float attractionMusicDuration = 10.0f;
     
     [SerializeField] private AbsorptionEffectItemType absorptionEffectItemType;
 
@@ -98,6 +106,7 @@ public class PickableItem : MonoBehaviour
             case AttractionItemType.TapirAttacks:
                 break;
             case AttractionItemType.PlayMusic:
+                GameCore.Instance.PlayNewMusic(attractionMusicToPlay, attractionMusicDuration);
                 break;
         }
     }

@@ -12,6 +12,8 @@ public class GameCore : AllosiusDevUtilities.Singleton<GameCore>
 {
     private bool gameEnded = false;
     
+    private IEnumerator _coroutinePlayMusic;
+    
     public TapirController tapir { get; protected set; }
     
     public PlayerInteraction player { get; protected set; }
@@ -21,6 +23,15 @@ public class GameCore : AllosiusDevUtilities.Singleton<GameCore>
     public AudioData Mainmusic;
     
     [SerializeField] private SceneData endGameSceneData;
+
+    [SerializeField]
+    private string startEventLabel = "Catch the tapir and get him out of the store before time runs out !";
+    
+    [SerializeField]
+    private string victoryEventLabel = "The tapir has been caught ! Congratulations !";
+    
+    [SerializeField]
+    private string defeatEventLabel = "You didn't catch the tapir in time...";
 
     private void Start()
     {
@@ -36,6 +47,8 @@ public class GameCore : AllosiusDevUtilities.Singleton<GameCore>
         
         GameCanvasManager.Instance.UpdateScore();
         GameCanvasManager.Instance.UpdateTimer();
+
+        GameCanvasManager.Instance.SetDisplayEventLabelUI(startEventLabel);
 
         AudioController.Instance.PlayAudio(Mainmusic);
         
@@ -60,9 +73,47 @@ public class GameCore : AllosiusDevUtilities.Singleton<GameCore>
         }
     }
 
+    public void PlayNewMusic(AudioData musicData, float musicDuration)
+    {
+        if (_coroutinePlayMusic != null)
+        {
+            StopCoroutine(_coroutinePlayMusic);
+        }
+
+        AudioController.Instance.StopAllMusics();
+        AudioController.Instance.PlayAudio(musicData);
+        
+        _coroutinePlayMusic = PlayNewMusicCoroutine(musicDuration);
+        StartCoroutine(_coroutinePlayMusic);
+    }
+
+    private IEnumerator PlayNewMusicCoroutine(float musicDuration)
+    {
+        yield return new WaitForSeconds(musicDuration);
+        
+        AudioController.Instance.StopAllMusics();
+        AudioController.Instance.PlayAudio(Mainmusic);
+    }
+
     public void EndGame()
     {
         gameEnded = true;
+
+        if (GameManager.Instance.tapirIsCaptured)
+        {
+            GameCanvasManager.Instance.SetDisplayEventLabelUI(victoryEventLabel);
+        }
+        else
+        {
+            GameCanvasManager.Instance.SetDisplayEventLabelUI(defeatEventLabel);
+        }
+
+        StartCoroutine(CoroutineEndGame());
+    }
+
+    private IEnumerator CoroutineEndGame()
+    {
+        yield return new WaitForSeconds(3.0f);
         
         SceneLoader.Instance.ChangeScene(endGameSceneData.sceneToLoad);
     }
