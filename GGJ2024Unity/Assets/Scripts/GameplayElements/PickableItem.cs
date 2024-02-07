@@ -99,6 +99,7 @@ public class PickableItem : MonoBehaviour
             case AttractionItemType.TapirSits:
                 break;
             case AttractionItemType.TapirFlees:
+                tapir.FleeDirection();
                 break;
             case AttractionItemType.TapirFollows:
                 tapir.FollowTarget(this);

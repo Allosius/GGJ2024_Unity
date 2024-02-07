@@ -21,6 +21,7 @@ public enum TapirMovementState
     Flee,
     Charge,
     FollowTarget,
+    FleeDirection,
 }
 
 [RequireComponent(typeof(FeedbacksReader))]
@@ -37,6 +38,8 @@ public class TapirController : MonoBehaviour
     private PickableItem currentFollowTarget;
     
     private Transform currentFleeTarget;
+    
+    private Vector3 currentFleeDirection;
     
     private PlayerInteraction currentPlayerInteraction;
 
@@ -81,6 +84,8 @@ public class TapirController : MonoBehaviour
     [SerializeField] private float sittingTimer = 2.0f;
 
     [SerializeField] private float fleeSpeed = 4.0f;
+    
+    [SerializeField] private float fleeDirectionTimer = 3.0f;
     
     [SerializeField] private float followTargetSpeed = 3.0f;
     [SerializeField] private float followTargetTimer = 3.0f;
@@ -136,6 +141,7 @@ public class TapirController : MonoBehaviour
                     }
                     else
                     {
+                        patrolAI.agent.enabled = true;
                         patrolAI.agent.SetDestination(currentFleeTarget.position);
                     }
                 }
@@ -143,6 +149,7 @@ public class TapirController : MonoBehaviour
             case TapirMovementState.FollowTarget:
                 if (currentFollowTarget != null)
                 {
+                    patrolAI.agent.enabled = true;
                     if (GameCore.Instance.player.GetComponent<FirstPersonCharacterGrabObjectsController>().pickedItem ==
                         currentFollowTarget)
                     {
@@ -153,6 +160,26 @@ public class TapirController : MonoBehaviour
                         patrolAI.agent.SetDestination(currentFollowTarget.transform.position);
                     }
                     
+                }
+                break;
+            case TapirMovementState.FleeDirection:
+                rb.isKinematic = false;
+                rb.constraints = RigidbodyConstraints.FreezeRotation | RigidbodyConstraints.FreezePositionY;
+                if (GameCore.Instance.player != null)
+                {
+                    Vector3 dir = transform.position - GameCore.Instance.player.transform.position;
+                    dir.Normalize();
+                    currentFleeDirection = dir;
+                    
+                    Vector3 velocity = new Vector3(currentFleeDirection.x * fleeSpeed, 
+                        0.0f, currentFleeDirection.z * fleeSpeed);
+                    rb.velocity = velocity;
+                    // Orientation de l'objet vers la direction du mouvement
+                    if (velocity != Vector3.zero)
+                    {
+                        //transform.LookAt(transform.position - velocity);
+                        transform.forward = rb.velocity.normalized;
+                    }
                 }
                 break;
         }
@@ -221,11 +248,14 @@ public class TapirController : MonoBehaviour
             return;;
         }
         
+        StopCoroutine(FleeDirectionCoroutine());
+        
         currentFollowTarget = target;
         
         currentAiState = TapirAIState.None;
         UpdateAiState();
-        
+
+        rb.velocity = Vector3.zero;
         currentMovementState = TapirMovementState.FollowTarget;
 
         patrolAI.agent.enabled = true;
@@ -242,6 +272,46 @@ public class TapirController : MonoBehaviour
         {
             currentFollowTarget = null;
         
+            rb.velocity = Vector3.zero;
+            currentMovementState = TapirMovementState.Default;
+        
+            currentAiState = TapirAIState.Patrol;
+            UpdateAiState();
+        }
+    }
+    
+    public void FleeDirection()
+    {
+        if (isSneezing)
+        {
+            return;;
+        }
+        
+        StopCoroutine(FollowTargetCoroutine(currentFollowTarget));
+        
+        currentFollowTarget = null;
+
+        currentAiState = TapirAIState.None;
+        UpdateAiState();
+        
+        rb.velocity = Vector3.zero;
+        currentMovementState = TapirMovementState.FleeDirection;
+
+        patrolAI.agent.enabled = false;
+        patrolAI.agent.speed = fleeSpeed;
+
+        StartCoroutine(FleeDirectionCoroutine());
+    }
+    
+    private IEnumerator FleeDirectionCoroutine()
+    {
+        yield return new WaitForSeconds(fleeDirectionTimer);
+
+        if (currentMovementState == TapirMovementState.FleeDirection)
+        {
+            currentFleeDirection = transform.position;
+        
+            rb.velocity = Vector3.zero;
             currentMovementState = TapirMovementState.Default;
         
             currentAiState = TapirAIState.Patrol;
@@ -259,6 +329,7 @@ public class TapirController : MonoBehaviour
         if (activeFlee)
         {
             StopCoroutine(FollowTargetCoroutine(currentFollowTarget));
+            StopCoroutine(FleeDirectionCoroutine());
         
             currentFollowTarget = null;
         
@@ -267,6 +338,7 @@ public class TapirController : MonoBehaviour
 
             currentFleeTarget = target;
         
+            rb.velocity = Vector3.zero;
             currentMovementState = TapirMovementState.Flee;
 
             patrolAI.agent.enabled = true;
@@ -278,6 +350,7 @@ public class TapirController : MonoBehaviour
             {
                 currentFleeTarget = null;
                 
+                rb.velocity = Vector3.zero;
                 currentMovementState = TapirMovementState.Default;
         
                 currentAiState = TapirAIState.Patrol;
@@ -295,6 +368,7 @@ public class TapirController : MonoBehaviour
         
         currentFollowTarget = null;
         
+        rb.velocity = Vector3.zero;
         currentMovementState = TapirMovementState.Default;
         
         currentAiState = TapirAIState.None;
