@@ -60,12 +60,14 @@ public class PickableItem : MonoBehaviour
     [SerializeField] private AbsorptionEffectItemType absorptionEffectItemType;
 
     [SerializeField] private FeedbacksData[] attractionFeedbacks;
+    [SerializeField] private AudioData[] attractionSfx;
 
     [SerializeField] private int tapirFillGaugeAmount = 10;
 
     [SerializeField] private float absorbMoveSpeedItem = 10.0f;
     
     [SerializeField] private FeedbacksData[] onTapirCollisionFeedbacks;
+    [SerializeField] private AudioData[] onTapirCollisionSfx;
 
     /// <summary>
     /// Method called on initialization.
@@ -90,6 +92,11 @@ public class PickableItem : MonoBehaviour
         for (int i = 0; i < attractionFeedbacks.Length; i++)
         {
             feedbacksReader.ReadFeedback(attractionFeedbacks[i]);
+        }
+        
+        if (attractionSfx.Length > 0)
+        {
+            AudioController.Instance.PlayRandomAudio(attractionSfx);
         }
        
         switch (attractionItemType)
@@ -172,6 +179,11 @@ public class PickableItem : MonoBehaviour
         for (int i = 0; i < onTapirCollisionFeedbacks.Length; i++)
         {
             currentTapir.FeedbacksReader.ReadFeedback(onTapirCollisionFeedbacks[i]);
+        }
+
+        if (onTapirCollisionSfx.Length > 0)
+        {
+            AudioController.Instance.PlayRandomAudio(onTapirCollisionSfx);
         }
     }
 
