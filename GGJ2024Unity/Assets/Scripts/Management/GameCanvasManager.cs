@@ -32,7 +32,7 @@ public class GameCanvasManager : Singleton<GameCanvasManager>
 
     public void UpdateScore()
     {
-        scoreAmountText.text = GameManager.Instance.currentScore.ToString();
+        scoreAmountText.text = "-" + GameManager.Instance.currentScore.ToString() + "$";
     }
 
     public void UpdateTimer()

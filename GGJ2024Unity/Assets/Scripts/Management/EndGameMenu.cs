@@ -17,7 +17,7 @@ public class EndGameMenu : MonoBehaviour
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
 
-        scoreAmountText.text = GameManager.Instance.currentScore.ToString();
+        scoreAmountText.text = "-" + GameManager.Instance.currentScore.ToString() + "$";
 
         if (GameManager.Instance.tapirIsCaptured)
         {

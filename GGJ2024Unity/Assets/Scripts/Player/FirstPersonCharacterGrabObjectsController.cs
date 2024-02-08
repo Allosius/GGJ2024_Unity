@@ -19,6 +19,8 @@ public class FirstPersonCharacterGrabObjectsController : MonoBehaviour
     public float grabRayLength = 0.5f;
     public float maxGrabDistance = 5f;
 
+    public LayerMask grabLayer;
+
 
     private void Start()
     {
@@ -40,7 +42,7 @@ public class FirstPersonCharacterGrabObjectsController : MonoBehaviour
                 var ray = characterCamera.ViewportPointToRay(Vector3.one * grabRayLength);
                 RaycastHit hit;
                 // Shot ray to find object to pick
-                if (Physics.Raycast(ray, out hit, maxGrabDistance))
+                if (Physics.Raycast(ray, out hit, maxGrabDistance, grabLayer))
                 {
                     // Check if object is pickable
                     var pickable = hit.transform.GetComponent<PickableItem>();
