@@ -32,6 +32,52 @@ public class FirstPersonCharacterGrabObjectsController : MonoBehaviour
     /// </summary>
     private void Update()
     {
+        if(!pickedItem)
+        {
+            // If no, try to pick item in front of the player
+            // Create ray from center of the screen
+            var ray = characterCamera.ViewportPointToRay(Vector3.one * grabRayLength);
+            RaycastHit hit;
+            // Shot ray to find object to pick
+            if (Physics.Raycast(ray, out hit, maxGrabDistance, grabLayer))
+            {
+                // Check if object is pickable
+                var pickable = hit.transform.GetComponent<PickableItem>();
+                // If object has PickableItem class
+                if (pickable)
+                {
+                    // Can Pick it
+                    GameCanvasManager.Instance.UpdateCursorState(true);
+                }
+                else
+                {
+                    GameCanvasManager.Instance.UpdateCursorState(false);
+                }
+            }
+            else
+            {
+                GameCanvasManager.Instance.UpdateCursorState(false);
+            }
+        }
+        else
+        {
+            if (playerInteraction.GetCurrentTapirInRange() == false)
+            {
+                GameCanvasManager.Instance.UpdateCursorState(false);
+            }
+            else
+            {
+                if (playerInteraction.CurrentTapirInRange && pickedItem && playerInteraction.CurrentTapirInRange.canAbsorbObject)
+                {
+                    GameCanvasManager.Instance.UpdateCursorState(true);
+                }
+                else
+                {
+                    GameCanvasManager.Instance.UpdateCursorState(false);
+                }
+            }
+        }
+        
         // Execute logic only on button pressed
         if (Input.GetMouseButtonDown(0))
         {

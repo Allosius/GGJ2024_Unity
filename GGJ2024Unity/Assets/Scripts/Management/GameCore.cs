@@ -32,6 +32,10 @@ public class GameCore : AllosiusDevUtilities.Singleton<GameCore>
     
     [SerializeField]
     private string defeatEventLabel = "You didn't catch the tapir in time...";
+    
+    [Space]
+    
+    [SerializeField] private PopUpText addScorePopUp;
 
     private void Start()
     {
@@ -93,6 +97,19 @@ public class GameCore : AllosiusDevUtilities.Singleton<GameCore>
         
         AudioController.Instance.StopAllMusics();
         AudioController.Instance.PlayAudio(Mainmusic);
+    }
+    
+    public void CreateScorePopUp(Transform target, int amount)
+    {
+        PopUpText textToInstantiate = addScorePopUp;
+
+        var myNewScore = Instantiate(textToInstantiate);
+        //Vector2 screenPosition = Camera.main.WorldToScreenPoint(target.position);
+
+
+        myNewScore.transform.SetParent(Camera.main.transform, true);
+        myNewScore.transform.position = target.position;
+        myNewScore.GetComponent<PopUpText>().SetPoints(amount);
     }
 
     public void EndGame()

@@ -5,6 +5,7 @@ using AllosiusDevUtilities;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameCanvasManager : Singleton<GameCanvasManager>
 {
@@ -18,6 +19,9 @@ public class GameCanvasManager : Singleton<GameCanvasManager>
     public float displayEventUiFadeDuration = 1f;
     public float displayEventDuration = 1.5f;
 
+    public Image normalCursor;
+    public Image grabCursor;
+
     private void Start()
     {
         GameManager.Instance.SetScoreEvent += UpdateScore;
@@ -28,6 +32,12 @@ public class GameCanvasManager : Singleton<GameCanvasManager>
     {
         GameManager.Instance.SetScoreEvent -= UpdateScore;
         GameManager.Instance.SetTimerEvent -= UpdateTimer;
+    }
+
+    public void UpdateCursorState(bool canGrab)
+    {
+        normalCursor.gameObject.SetActive(!canGrab);
+        grabCursor.gameObject.SetActive(canGrab);
     }
 
     public void UpdateScore()
