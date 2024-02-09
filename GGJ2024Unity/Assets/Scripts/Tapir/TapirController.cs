@@ -64,6 +64,8 @@ public class TapirController : MonoBehaviour
     public bool canAbsorbObject { get; set; } = true;
 
     public bool IsSneezing => isSneezing;
+
+    public GameObject graphics;
     
     [SerializeField] private bool drawGizmos = true;
 

@@ -11,6 +11,7 @@ public class WinDoorTrigger : MonoBehaviour
         {
             GameManager.Instance.tapirIsCaptured = true;
             GameCore.Instance.EndGame();
+            tapir.graphics.SetActive(false);
         }
     }
 }
