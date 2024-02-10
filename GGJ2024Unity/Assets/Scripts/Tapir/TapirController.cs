@@ -546,10 +546,19 @@ public class TapirController : MonoBehaviour
         //rb.constraints = RigidbodyConstraints.None;
 
         Vector3 direction = currentPlayerInteraction.transform.position - transform.position;
+        Debug.Log(direction);
+        float dirXMultiplier = 1.0f;
+        if (direction.x < 0)
+        {
+            dirXMultiplier = -1.0f;
+        }
         float angle = Mathf.Rad2Deg * Mathf.Atan2(direction.y, direction.x);
+        Debug.Log(angle);
         direction.Normalize();
-        direction = Quaternion.Euler(0f, 0f, -angle + sneezeEjectionAngle) * direction;
-        rb.velocity = (new Vector3(-direction.x * sneezeForceMagnitude, sneezeVerticalForce, -direction.z * sneezeForceMagnitude)) * fillGaugeProgress;
+        direction = Quaternion.Euler(0f, 0f, angle + sneezeEjectionAngle) * direction;
+        Debug.Log(direction);
+        direction.Normalize();
+        rb.velocity = (new Vector3(dirXMultiplier * direction.x * sneezeForceMagnitude, sneezeVerticalForce, -direction.z * sneezeForceMagnitude)) * fillGaugeProgress;
 
         fillGaugeProgress = 0;
         
