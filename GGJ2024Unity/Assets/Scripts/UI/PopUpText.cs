@@ -23,7 +23,7 @@ public class PopUpText : MonoBehaviour
     {
         transform.position += new Vector3(0f, moveSpeed * Time.unscaledDeltaTime, 0f);
         
-        GetComponent<RectTransform>().localEulerAngles = Vector3.zero;
+        GetComponent<RectTransform>().eulerAngles = Camera.main.transform.eulerAngles;
     }
 
     public void SetPoints(int amount)
