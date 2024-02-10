@@ -61,6 +61,8 @@ public class TapirController : MonoBehaviour
 
     public Rigidbody Rb => rb;
 
+    public Animator Animator => animator;
+
     public bool canAbsorbObject { get; set; } = true;
 
     public bool IsSneezing => isSneezing;
@@ -103,6 +105,13 @@ public class TapirController : MonoBehaviour
     [SerializeField] private int sneezeFillGaugeAmount = 100;
     
     [SerializeField] private int sneezeAbsoluteMaxFillGaugeAmount = 300;
+
+    [Space] 
+    
+    public Transform stateFeedbackPoint;
+    
+    [SerializeField] private PopUpText stateAttractedFeedbackPopUp;
+    [SerializeField] private PopUpText stateScaredFeedbackPopUp;
 
     
     public event Action OnEnterCollisionWithObject;
@@ -185,6 +194,36 @@ public class TapirController : MonoBehaviour
                 }
                 break;
         }
+
+        if (currentMovementState == TapirMovementState.FollowTarget || currentMovementState == TapirMovementState.Flee
+            || currentMovementState == TapirMovementState.FleeDirection || currentMovementState == TapirMovementState.Charge
+            || currentAiState == TapirAIState.Patrol)
+        {
+            animator.SetBool("isWalking", true);
+        }
+        else
+        {
+            animator.SetBool("isWalking", false);
+        }
+        
+        if (currentMovementState == TapirMovementState.Flee || currentMovementState == TapirMovementState.FleeDirection 
+            || currentMovementState == TapirMovementState.Charge)
+        {
+            animator.SetBool("isRunning", true);
+        }
+        else
+        {
+            animator.SetBool("isRunning", false);
+        }
+
+        if (currentAiState == TapirAIState.Sit)
+        {
+            animator.SetBool("isSit", true);
+        }
+        else
+        {
+            animator.SetBool("isSit", false);
+        }
     }
 
     private void FixedUpdate()
@@ -227,6 +266,30 @@ public class TapirController : MonoBehaviour
         }
     }
     
+    public void CreateScaredFeedbackPopUp(Transform target, string label)
+    {
+        PopUpText textToInstantiate = stateScaredFeedbackPopUp;
+
+        CreateStateFeedbackPopUp(target, label, textToInstantiate);
+    }
+    
+    public void CreateAttractedFeedbackPopUp(Transform target, string label)
+    {
+        PopUpText textToInstantiate = stateAttractedFeedbackPopUp;
+
+        CreateStateFeedbackPopUp(target, label, textToInstantiate);
+    }
+
+    public void CreateStateFeedbackPopUp(Transform target, string label, PopUpText popUpPrefab)
+    {
+        var myNewScore = Instantiate(popUpPrefab);
+        //Vector2 screenPosition = Camera.main.WorldToScreenPoint(target.position);
+
+        myNewScore.transform.SetParent(transform, true);
+        myNewScore.transform.position = target.position;
+        myNewScore.GetComponent<PopUpText>().SetText(label);
+    }
+    
     private void UpdateAiState()
     {
         switch (currentAiState)
@@ -259,6 +322,8 @@ public class TapirController : MonoBehaviour
 
         rb.velocity = Vector3.zero;
         currentMovementState = TapirMovementState.FollowTarget;
+        
+        CreateAttractedFeedbackPopUp(stateFeedbackPoint, "?");
 
         patrolAI.agent.enabled = true;
         patrolAI.agent.speed = followTargetSpeed;
@@ -298,6 +363,8 @@ public class TapirController : MonoBehaviour
         
         rb.velocity = Vector3.zero;
         currentMovementState = TapirMovementState.FleeDirection;
+        
+        CreateScaredFeedbackPopUp(stateFeedbackPoint, "!");
 
         patrolAI.agent.enabled = false;
         patrolAI.agent.speed = fleeSpeed;
@@ -342,6 +409,8 @@ public class TapirController : MonoBehaviour
         
             rb.velocity = Vector3.zero;
             currentMovementState = TapirMovementState.Flee;
+            
+            CreateScaredFeedbackPopUp(stateFeedbackPoint, "!");
 
             patrolAI.agent.enabled = true;
             patrolAI.agent.speed = fleeSpeed;
@@ -364,6 +433,8 @@ public class TapirController : MonoBehaviour
 
     public void AbsorbPickableItem(PickableItem item)
     {
+        animator.SetTrigger("Chew");
+        
         canAbsorbObject = false;
 
         StopCoroutine(FollowTargetCoroutine(currentFollowTarget));
@@ -419,6 +490,11 @@ public class TapirController : MonoBehaviour
         {
             canAbsorbObject = true;
             OnEndAbsorption?.Invoke(false);
+            
+            currentMovementState = TapirMovementState.Default;
+        
+            currentAiState = TapirAIState.Patrol;
+            UpdateAiState();
         }
     }
 

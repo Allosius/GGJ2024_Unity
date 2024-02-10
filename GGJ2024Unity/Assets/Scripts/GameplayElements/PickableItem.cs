@@ -164,7 +164,19 @@ public class PickableItem : MonoBehaviour
                     //tapir.OnEnterCollisionWithObject -= PlayFeedbacksOnTapirCollision;
                     break;
             }
+
+            if (gameObject.activeSelf)
+            {
+                StartCoroutine(OnAbsorbedOffCoroutine());
+            }
         }
+    }
+
+    private IEnumerator OnAbsorbedOffCoroutine()
+    {
+        yield return new WaitForSeconds(1.5f);
+
+        rb.velocity = Vector3.zero;
     }
 
     public void PlayFeedbacksOnTapirCollision()
