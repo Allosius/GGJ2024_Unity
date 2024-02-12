@@ -511,6 +511,11 @@ public class TapirController : MonoBehaviour
     private IEnumerator SneezeCoroutine()
     {
         Debug.Log("Sneeze");
+
+        if (GameCore.Instance.achievementSneeze == false)
+        {
+            GameCore.Instance.SetAchievementSneezeValue(true);
+        }
         
         animator.SetTrigger("isSneezing");
         

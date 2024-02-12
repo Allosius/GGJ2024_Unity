@@ -31,12 +31,24 @@ public class GameManager : Singleton<GameManager>
     public void SetCurrentScore(int value)
     {
         currentScore = value;
+        
+        if (GameCore.Instance.achievementTooDestructions == false && currentScore >= GameCore.Instance.AchievementTooDestructionsConditionAmount)
+        {
+            GameCore.Instance.SetAchievementTooDestructionsValue(true);
+        }
+        
         SetScoreEvent?.Invoke();
     }
 
     public void AddScore(int amount)
     {
         currentScore += amount;
+
+        if (GameCore.Instance.achievementTooDestructions == false && currentScore >= GameCore.Instance.AchievementTooDestructionsConditionAmount)
+        {
+            GameCore.Instance.SetAchievementTooDestructionsValue(true);
+        }
+        
         SetScoreEvent?.Invoke();
     }
 

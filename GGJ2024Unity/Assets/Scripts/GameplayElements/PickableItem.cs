@@ -48,6 +48,9 @@ public class PickableItem : MonoBehaviour
     
     public TapirController currentTapir { get; set; }
 
+    [SerializeField] private bool isCatchThemAllItem;
+    
+    [SerializeField] private bool isEggPlantItem;
 
     [SerializeField] private AttractionItemType attractionItemType;
     
@@ -107,6 +110,10 @@ public class PickableItem : MonoBehaviour
                 break;
             case AttractionItemType.TapirFlees:
                 tapir.FleeDirection();
+                if (GameCore.Instance.achievementUseEggPlant == false && isEggPlantItem)
+                {
+                    GameCore.Instance.SetAchievementUseEggPlant(true);
+                }
                 break;
             case AttractionItemType.TapirFollows:
                 tapir.FollowTarget(this);
@@ -115,6 +122,10 @@ public class PickableItem : MonoBehaviour
                 break;
             case AttractionItemType.PlayMusic:
                 GameCore.Instance.PlayNewMusic(attractionMusicToPlay, attractionMusicDuration);
+                if (GameCore.Instance.achievementCatchThemAll == false && isCatchThemAllItem)
+                {
+                    GameCore.Instance.SetAchievementCatchThemAllValue(true);
+                }
                 break;
         }
     }

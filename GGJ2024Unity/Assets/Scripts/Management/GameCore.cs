@@ -15,7 +15,14 @@ public class GameCore : AllosiusDevUtilities.Singleton<GameCore>
     private IEnumerator _coroutinePlayMusic;
 
     
-    private bool achievementSneeze;
+    public bool achievementSneeze { get; protected set; }
+    
+    public bool achievementTooDestructions { get; protected set; }
+    public int AchievementTooDestructionsConditionAmount => achievementTooDestructionsConditionAmount;
+    
+    public bool achievementCatchThemAll { get; protected set; }
+    
+    public bool achievementUseEggPlant { get; protected set; }
     
     
     public TapirController tapir { get; protected set; }
@@ -36,6 +43,20 @@ public class GameCore : AllosiusDevUtilities.Singleton<GameCore>
     
     [SerializeField]
     private string defeatEventLabel = "You didn't catch the tapir in time...";
+    
+    
+    [SerializeField]
+    private string achievementSneezeEventLabel = "Sneezy - Make it sneeze !";
+    
+    [SerializeField]
+    private string achievementTooDestructionsEventLabel = "It's Over 9000 ! - Destroy for more than 9000 $";
+    [SerializeField] private int achievementTooDestructionsConditionAmount = 9000;
+    
+    [SerializeField]
+    private string achievementCatchThemAllEventLabel = "Catch'them'All - I wanna be the very best";
+    
+    [SerializeField]
+    private string achievementUseEggPlantEventLabel = "Not that Way - Affraid with the eggplant";
     
     [Space]
     
@@ -137,5 +158,49 @@ public class GameCore : AllosiusDevUtilities.Singleton<GameCore>
         yield return new WaitForSeconds(3.0f);
         
         SceneLoader.Instance.ChangeScene(endGameSceneData.sceneToLoad);
+    }
+
+    public void SetAchievementSneezeValue(bool value)
+    {
+        bool tempAchievementSneeze = achievementSneeze;
+        achievementSneeze = value;
+
+        if (achievementSneeze && tempAchievementSneeze == false)
+        {
+            GameCanvasManager.Instance.SetDisplayEventLabelUI(achievementSneezeEventLabel);
+        }
+    }
+    
+    public void SetAchievementTooDestructionsValue(bool value)
+    {
+        bool tempAchievementTooDestructions = achievementTooDestructions;
+        achievementTooDestructions = value;
+
+        if (achievementTooDestructions && tempAchievementTooDestructions == false && GameManager.Instance.currentScore >= achievementTooDestructionsConditionAmount)
+        {
+            GameCanvasManager.Instance.SetDisplayEventLabelUI(achievementTooDestructionsEventLabel);
+        }
+    }
+    
+    public void SetAchievementCatchThemAllValue(bool value)
+    {
+        bool tempAchievementCatchThemAll = achievementCatchThemAll;
+        achievementCatchThemAll = value;
+
+        if (achievementCatchThemAll && tempAchievementCatchThemAll == false)
+        {
+            GameCanvasManager.Instance.SetDisplayEventLabelUI(achievementCatchThemAllEventLabel);
+        }
+    }
+    
+    public void SetAchievementUseEggPlant(bool value)
+    {
+        bool tempAchievementUseEggPlant = achievementUseEggPlant;
+        achievementUseEggPlant = value;
+
+        if (achievementUseEggPlant && tempAchievementUseEggPlant == false)
+        {
+            GameCanvasManager.Instance.SetDisplayEventLabelUI(achievementUseEggPlantEventLabel);
+        }
     }
 }
