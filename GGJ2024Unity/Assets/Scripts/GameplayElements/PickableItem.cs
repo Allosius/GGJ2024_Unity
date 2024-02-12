@@ -52,6 +52,10 @@ public class PickableItem : MonoBehaviour
     
     [SerializeField] private bool isEggPlantItem;
 
+    [SerializeField] private bool isBookItem;
+    
+    [SerializeField] private bool isPlushItem;
+    
     [SerializeField] private AttractionItemType attractionItemType;
     
     [ShowIf("attractionItemType", AttractionItemType.PlayMusic)]
@@ -101,7 +105,12 @@ public class PickableItem : MonoBehaviour
         {
             AudioController.Instance.PlayRandomAudio(attractionSfx);
         }
-       
+
+        if (GameCore.Instance.achievementUseBook == false && isBookItem)
+        {
+            GameCore.Instance.SetAchievementUseBook(true);
+        }
+        
         switch (attractionItemType)
         {
             case AttractionItemType.None:
@@ -117,6 +126,10 @@ public class PickableItem : MonoBehaviour
                 break;
             case AttractionItemType.TapirFollows:
                 tapir.FollowTarget(this);
+                if (GameCore.Instance.achievementUsePlush == false && isPlushItem)
+                {
+                    GameCore.Instance.SetAchievementUsePlush(true);
+                }
                 break;
             case AttractionItemType.TapirAttacks:
                 break;

@@ -24,6 +24,10 @@ public class GameCore : AllosiusDevUtilities.Singleton<GameCore>
     
     public bool achievementUseEggPlant { get; protected set; }
     
+    public bool achievementUseBook { get; protected set; }
+    
+    public bool achievementUsePlush { get; protected set; }
+    
     
     public TapirController tapir { get; protected set; }
     
@@ -57,6 +61,12 @@ public class GameCore : AllosiusDevUtilities.Singleton<GameCore>
     
     [SerializeField]
     private string achievementUseEggPlantEventLabel = "Not that Way - Affraid with the eggplant";
+    
+    [SerializeField]
+    private string achievementUseBookEventLabel = "Cannot read Bro - Show her books";
+    
+    [SerializeField]
+    private string achievementUsePlushEventLabel = "Love is on the way - Plushes are so cute, aren't they ?";
     
     [Space]
     
@@ -201,6 +211,28 @@ public class GameCore : AllosiusDevUtilities.Singleton<GameCore>
         if (achievementUseEggPlant && tempAchievementUseEggPlant == false)
         {
             GameCanvasManager.Instance.SetDisplayEventLabelUI(achievementUseEggPlantEventLabel);
+        }
+    }
+    
+    public void SetAchievementUseBook(bool value)
+    {
+        bool tempAchievementUseBook = achievementUseBook;
+        achievementUseBook = value;
+
+        if (achievementUseBook && tempAchievementUseBook == false)
+        {
+            GameCanvasManager.Instance.SetDisplayEventLabelUI(achievementUseBookEventLabel);
+        }
+    }
+    
+    public void SetAchievementUsePlush(bool value)
+    {
+        bool tempAchievementUsePlush = achievementUsePlush;
+        achievementUsePlush = value;
+
+        if (achievementUsePlush && tempAchievementUsePlush == false)
+        {
+            GameCanvasManager.Instance.SetDisplayEventLabelUI(achievementUsePlushEventLabel);
         }
     }
 }
