@@ -19,7 +19,7 @@ MonoBehaviour:
   priority: 128
   parameters2d: 0
   volume2d: 0.25
-  parameters3d: 0
-  volume3d: 0.25
-  spacialBlend: 0
-  _maxDistance: 500
+  parameters3d: 1
+  volume3d: 3
+  spacialBlend: 1
+  _maxDistance: 5000

@@ -13,6 +13,10 @@ public class GameCore : AllosiusDevUtilities.Singleton<GameCore>
     private bool gameEnded = false;
     
     private IEnumerator _coroutinePlayMusic;
+
+    
+    private bool achievementSneeze;
+    
     
     public TapirController tapir { get; protected set; }
     

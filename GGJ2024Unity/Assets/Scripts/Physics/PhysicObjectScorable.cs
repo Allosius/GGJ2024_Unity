@@ -19,6 +19,8 @@ public class PhysicObject : MonoBehaviour
         PhysicTrigger physicTrigger = other.gameObject.GetComponent<PhysicTrigger>();
         if (physicTrigger && canGiveScore)
         {
+            Debug.Log(transform.parent.name + " Give Score");
+            
             canGiveScore = false;
 
             int scoreAmount = Random.Range(scoreAmountMin, scoreAmountMax);
