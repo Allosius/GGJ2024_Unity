@@ -319,20 +319,24 @@ public class TapirController : MonoBehaviour
         
         currentAiState = TapirAIState.None;
         UpdateAiState();
-
-        rb.velocity = Vector3.zero;
-        currentMovementState = TapirMovementState.FollowTarget;
         
         CreateAttractedFeedbackPopUp(stateFeedbackPoint, "?");
-
-        patrolAI.agent.enabled = true;
-        patrolAI.agent.speed = followTargetSpeed;
-
+        
+        animator.SetTrigger("TiltHead");
+        
         StartCoroutine(FollowTargetCoroutine(target));
     }
 
     private IEnumerator FollowTargetCoroutine(PickableItem transform)
     {
+        yield return new WaitForSeconds(0.2f);
+        
+        rb.velocity = Vector3.zero;
+        currentMovementState = TapirMovementState.FollowTarget;
+
+        patrolAI.agent.enabled = true;
+        patrolAI.agent.speed = followTargetSpeed;
+        
         yield return new WaitForSeconds(followTargetTimer);
 
         if (currentMovementState == TapirMovementState.FollowTarget)
@@ -601,6 +605,7 @@ public class TapirController : MonoBehaviour
             case TapirAIState.Patrol :
                 Debug.Log("Set Sit");
                 currentAiState = TapirAIState.Sit;
+                animator.SetTrigger("TiltHead");
                 break;
             case TapirAIState.Sit:
                 Debug.Log("Set Patrol");
