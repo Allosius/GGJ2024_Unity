@@ -107,8 +107,8 @@ public class GameCore : AllosiusDevUtilities.Singleton<GameCore>
         //Vector2 screenPosition = Camera.main.WorldToScreenPoint(target.position);
 
 
-        myNewScore.transform.SetParent(transform, true);
         myNewScore.transform.position = target.position;
+        myNewScore.transform.SetParent(transform, true);
         myNewScore.GetComponent<PopUpText>().SetPoints(amount);
     }
 
